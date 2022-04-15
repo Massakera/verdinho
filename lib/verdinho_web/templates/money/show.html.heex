@@ -1,0 +1,38 @@
+<h1>Show Money</h1>
+
+<ul>
+
+  <li>
+    <strong>Id:</strong>
+    <%= @money.id %>
+  </li>
+
+  <li>
+    <strong>Owner:</strong>
+    <%= @money.owner %>
+  </li>
+
+  <li>
+    <strong>Destiny:</strong>
+    <%= @money.destiny %>
+  </li>
+
+  <li>
+    <strong>Value:</strong>
+    <%= @money.value %>
+  </li>
+
+  <li>
+    <strong>Time:</strong>
+    <%= @money.time %>
+  </li>
+
+  <li>
+    <strong>Currency:</strong>
+    <%= @money.currency %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.money_path(@conn, :edit, @money) %></span> |
+<span><%= link "Back", to: Routes.money_path(@conn, :index) %></span>

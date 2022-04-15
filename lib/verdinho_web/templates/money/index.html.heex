@@ -1,0 +1,36 @@
+<h1>Listing Transactions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Owner</th>
+      <th>Destiny</th>
+      <th>Value</th>
+      <th>Time</th>
+      <th>Currency</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for money <- @transactions do %>
+    <tr>
+      <td><%= money.id %></td>
+      <td><%= money.owner %></td>
+      <td><%= money.destiny %></td>
+      <td><%= money.value %></td>
+      <td><%= money.time %></td>
+      <td><%= money.currency %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.money_path(@conn, :show, money) %></span>
+        <span><%= link "Edit", to: Routes.money_path(@conn, :edit, money) %></span>
+        <span><%= link "Delete", to: Routes.money_path(@conn, :delete, money), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Money", to: Routes.money_path(@conn, :new) %></span>
