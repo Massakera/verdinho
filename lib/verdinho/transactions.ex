@@ -73,6 +73,7 @@ defmodule Verdinho.Transactions do
     |> Repo.update()
   end
 
+
   @doc """
   Deletes a money.
 
@@ -100,5 +101,53 @@ defmodule Verdinho.Transactions do
   """
   def change_money(%Money{} = money, attrs \\ %{}) do
     Money.changeset(money, attrs)
+  end
+
+  def convert_params(data) do
+    data
+    |> Enum.map(fn transactions ->
+      transactions
+      |> Enum.map(fn transaction -> transaction end)
+      |> Enum.map(fn {key, value} -> {key, value} end)
+      |> Enum.into(%{})
+      |> convert()
+    end)
+  end
+
+  def convert(data) do
+    for {key, val} <- data, into: %{}, do: {String.to_atom(key), val}
+  end
+
+  def parse_field(transaction) do
+    timestamp =
+      NaiveDateTime.utc_now()
+      |> NaiveDateTime.truncate(:second)
+
+    transaction
+    |> Map.put("inserted_at", timestamp)
+    |> Map.put("updated_at", timestamp)
+  end
+
+  defp csv_decoder(file) do
+    csv =
+      "#{file.path}"
+      |> Path.expand(__DIR__)
+      |> File.stream!()
+      |> CSV.decode(headers: true)
+      |> Enum.map(fn data -> data end)
+  end
+
+# IMPORT TRANSACTIONS ---->
+
+  defp import_transactions(data) do
+    transactions = Enum.map(data, fn {:ok, transaction} -> parse(transaction) end)
+
+    params = Transactions.convert_params(transactions)
+
+    {_, _} = Transactions.insert_transaction(params)
+  end
+
+  defp parse(transaction) do
+    fields = Transactions.parse_fields(transaction)
   end
 end

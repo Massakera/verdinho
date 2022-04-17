@@ -18,6 +18,8 @@ defmodule VerdinhoWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/money-import", MoneyController, :import
+    resources "/money", MoneyController
   end
 
   # Other scopes may use custom stacks.

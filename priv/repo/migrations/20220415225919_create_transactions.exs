@@ -3,7 +3,6 @@ defmodule Verdinho.Repo.Migrations.CreateTransactions do
 
   def change do
     create table(:transactions) do
-      add :id, :integer
       add :owner, :string
       add :destiny, :string
       add :value, :decimal

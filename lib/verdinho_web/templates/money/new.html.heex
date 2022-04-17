@@ -1,5 +1,8 @@
-<h1>New Money</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.money_path(@conn, :create)) %>
-
+<h1>Upload file</h1>
+<%= form_for @conn, Routes.money_path(@conn, :import), [multipart: true], fn f -> %>
+  <%= file_input f, :csv, accept: ".csv", required: true %>
+  <div>
+    <%= submit "Import transactions" %>
+  </div>
+<% end %>
 <span><%= link "Back", to: Routes.money_path(@conn, :index) %></span>

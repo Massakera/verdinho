@@ -5,7 +5,6 @@ defmodule Verdinho.Transactions.Money do
   schema "transactions" do
     field :currency, :string
     field :destiny, :string
-    field :id, :integer
     field :owner, :string
     field :time, :utc_datetime
     field :value, :decimal

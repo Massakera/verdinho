@@ -59,4 +59,50 @@ defmodule VerdinhoWeb.MoneyController do
     |> put_flash(:info, "Money deleted successfully.")
     |> redirect(to: Routes.money_path(conn, :index))
   end
+
+  def import(conn, %{"csv" => csv}) do
+    data = csv_decoder(csv)
+    result = import_transactions(data)
+
+    conn
+    |> put_flash(:info, "Transaction imported successfully.")
+    |> redirect(to: Routes.money_path(conn, :index))
+  end
+
+  defp import_transactions(data) do
+    transactions = Enum.map(data, fn {:ok, transaction} -> parse(transaction) end)
+    params = Transactions.convert_params(transactions)
+
+    {_, _} = Transactions.insert_transactions(params)
+  end
+
+  defp csv_decoder(file) do
+    csv =
+      "#(file.path)"
+      |> Path.expand(__DIR__)
+      |> File.stream!()
+      |> CSV.decode(headers: true)
+      |> Enum.map(fn data -> data end)
+  end
+
+  defp import_transactions(data) do
+    transactions = Enum.map(data, fn (:ok, transaction) -> parse(transaction) end)
+
+    params = Transactions.convert_params(transactions)
+
+    {_, _}= Transactions.insert_transactions(params)
+  end
+
+  defp parse(transaction) do
+    fields = Transactions.parse_field(transaction)
+  end
+
+#=== INSERT ALL ====
+  def insert_transaction(items) do
+    Transaction
+    |> Repo.insert_all(items,
+    on_conflict: :nothing,
+    returning: true
+    )
+  end
 end
